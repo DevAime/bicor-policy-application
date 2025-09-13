@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if action == 'add' %}Add Policy - {{ client.Nom }} {{ client.Prenom }}{% else %}Edit Policy - {{ policy.PolicyNumber }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    {% if action == 'add' %}
+                    <i class="fas fa-file-contract me-2"></i>Add New Policy for {{ client.Nom }} {{ client.Prenom }}
+                    {% else %}
+                    <i class="fas fa-edit me-2"></i>Edit Policy: {{ policy.PolicyNumber }}
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Client Information -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6 class="text-bicor border-bottom pb-2">Client Information</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Client:</strong> {{ client.Nom }} {{ client.Prenom }}
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Client ID:</strong> {{ client.ID }}
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>NIF:</strong> {{ client.NIF or 'N/A' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Policy Basic Information -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Basic Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Product *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="ProductID" required>
+                                        <option value="">Select Product</option>
+                                        {% for product in form_data.products %}
+                                        <option value="{{ product.ProductID }}" {% if policy and policy.ProductID == product.ProductID %}selected{% endif %}>
+                                            {{ product.ProductName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Policy Number</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-control-plaintext bg-light p-2 rounded">
+                                        <i class="fas fa-hashtag text-bicor me-2"></i>
+                                        <span class="text-muted">Will be auto-generated</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Event Type *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="EventTypeID" required>
+                                        <option value="">Select Event Type</option>
+                                        {% for event in form_data.event_types %}
+                                        <option value="{{ event.EventTypeID }}" {% if policy and policy.EventTypeID == event.EventTypeID %}selected{% endif %}>
+                                            {{ event.EventName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Policy Type *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="PolicyTypeID" required>
+                                        <option value="">Select Policy Type</option>
+                                        {% for type in form_data.policy_types %}
+                                        <option value="{{ type.TypeID }}" {% if policy and policy.PolicyTypeID == type.TypeID %}selected{% endif %}>
+                                            {{ type.TypeName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Option *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="OptionID" required>
+                                        <option value="">Select Option</option>
+                                        {% for option in form_data.options %}
+                                        <option value="{{ option.OptionID }}" {% if policy and policy.OptionID == option.OptionID %}selected{% endif %}>
+                                            {{ option.OptionName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Term *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="TermID" required>
+                                        <option value="">Select Term</option>
+                                        {% for term in form_data.terms %}
+                                        <option value="{{ term.TermID }}" {% if policy and policy.TermID == term.TermID %}selected{% endif %}>
+                                            {{ term.TermName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Courtier (Broker)</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="CourtierID">
+                                        <option value="">Select Courtier</option>
+                                        {% for courtier in form_data.courtiers %}
+                                        <option value="{{ courtier.CourtierID }}" {% if policy and policy.CourtierID == courtier.CourtierID %}selected{% endif %}>
+                                            {{ courtier.CourtierName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <label class="col-form-label fw-bold text-bicor">Description</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <textarea class="form-control" name="Description" rows="2" placeholder="Policy description...">{{ policy.Description if policy else '' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Policy Reference Numbers -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Reference Numbers</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Old Policy Number</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="OldPolicyNumber"
+                                           value="{{ policy.OldPolicyNumber if policy else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Endorsement Number</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="EndorsementNumber"
+                                           value="{{ policy.EndorsementNumber if policy else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Other Endorsement No.</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="OtherEndorsementNumber"
+                                           value="{{ policy.OtherEndorsementNumber if policy else '00000' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dates and Duration -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Dates & Duration</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Production Date *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" name="ProductionDate"
+                                           value="{{ policy.ProductionDate if policy else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Expiry Date *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" name="ExpiryDate"
+                                           value="{{ policy.ExpiryDate if policy else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Duration (Months)</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" name="DurationMonths"
+                                           value="{{ policy.DurationMonths if policy else '' }}" min="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Information -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Purchase Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Purchase Order</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="PurchaseOrder"
+                                           value="{{ policy.PurchaseOrder if policy else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">PO Number</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="PurchaseOrderNumber"
+                                           value="{{ policy.PurchaseOrderNumber if policy else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Credit Authorized By</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="CreditAuthorizedBy"
+                                           value="{{ policy.CreditAuthorizedBy if policy else '---' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agency and User Information -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Agency & User Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Agency *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="AgencyID" required>
+                                        <option value="">Select Agency</option>
+                                        {% for agency in form_data.agencies %}
+                                        <option value="{{ agency.AgencyID }}" {% if policy and policy.AgencyID == agency.AgencyID %}selected{% endif %}>
+                                            {{ agency.AgencyName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Created By *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="CreatedByUserID" required>
+                                        <option value="">Select User</option>
+                                        {% for user in form_data.users %}
+                                        <option value="{{ user.UserID }}" {% if policy and policy.CreatedByUserID == user.UserID %}selected{% endif %}>
+                                            {{ user.FullName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Created On *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" name="CreatedOn"
+                                           value="{{ policy.CreatedOn if policy else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-bicor">
+                                    <i class="fas fa-save me-2"></i>
+                                    {% if action == 'add' %}Create Policy{% else %}Update Policy{% endif %}
+                                </button>
+                                <a href="{{ url_for('client_policies', client_id=client.ID) }}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                {% if action == 'edit' %}
+                                <a href="{{ url_for('client_policies', client_id=client.ID) }}" class="btn btn-info">
+                                    <i class="fas fa-list me-2"></i>View All Policies
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

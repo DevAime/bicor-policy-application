@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Prime Calculation - Policy {{ policy_id }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-calculator me-2"></i>Prime Calculation - Policy {{ policy_id }}</h4>
+            </div>
+            <div class="card-body">
+                <!-- Policy Information -->
+                <div class="alert alert-info">
+                    <strong>Sous Type Bien:</strong> {{ prime_result.sous_type_bien_name }}<br>
+                    <strong>Selected Garantits:</strong> {{ prime_result.selected_garantits }}<br>
+                    <strong>Total Tarif Rate:</strong> {{ prime_result.total_tarif_rate }}%
+                </div>
+
+                <!-- Value Summary -->
+                <h6 class="text-bicor border-bottom pb-2">Value Summary (BIF)</h6>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h6>Valeur Bien Assuré</h6>
+                                <h4 class="text-bicor">{{ prime_result.valeur_bien | format_currency }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h6>Valeur Équipements</h6>
+                                <h4 class="text-bicor">{{ prime_result.valeur_equipements | format_currency }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6>Valeur Assurée Totale</h6>
+                                <h4 class="text-info">{{ prime_result.valeur_assure | format_currency }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h6>Prime Totale (PT)</h6>
+                                <h4>{{ prime_result.pt | format_currency }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Garantit Details -->
+                <!-- In the Garantit Breakdown section, update the table: -->
+                <h6 class="text-bicor border-bottom pb-2">Garantit Breakdown</h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Garantit</th>
+                                <th>Tarif Rate (%)</th>
+                                <th>Prime Nette (PN)</th>
+                                <th>Frais (FR)</th>
+                                <th>Commission (CD)</th>
+                                <th>TVA</th>
+                                <th>Prime Totale</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in prime_result.garantit_details %}
+                            <tr>
+                                <td><strong>{{ detail.code }}</strong></td>
+                                <td>{{ detail.tarif_rate }}%</td>
+                                <td>{{ detail.pn | format_currency }}</td>
+                                <td>{{ detail.fr | format_currency }}</td>
+                                <td>{{ detail.cd | format_currency }}</td>
+                                <td>{{ detail.tva | format_currency }}</td>
+                                <td><strong>{{ detail.pt | format_currency }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-info">
+                            <tr>
+                                <th colspan="2">TOTALS</th>
+                                <th><strong>{{ prime_result.pn | format_currency }}</strong></th>
+                                <th><strong>{{ prime_result.fr | format_currency }}</strong></th>
+                                <th><strong>{{ prime_result.cd | format_currency }}</strong></th>
+                                <th><strong>{{ prime_result.tva | format_currency }}</strong></th>
+                                <th><strong>{{ prime_result.pt | format_currency }}</strong></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Prime Calculation Details -->
+                <h6 class="text-bicor border-bottom pb-2">Prime Calculation Details</h6>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h6>Prime Nette (PN)</h6>
+                                <h5 class="text-primary">{{ prime_result.pn | format_currency }}</h5>
+                                <small>Valeur Assurée × Tarif Rate</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h6>Frais (FR) - 8%</h6>
+                                <h5 class="text-warning">{{ prime_result.fr | format_currency }}</h5>
+                                <small>PN × 8%</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h6>Commission (CD) - 5.5%</h6>
+                                <h5 class="text-info">{{ prime_result.cd | format_currency }}</h5>
+                                <small>(PN + FR) × 5.5%</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h6>TVA - 18%</h6>
+                                <h5 class="text-danger">{{ prime_result.tva | format_currency }}</h5>
+                                <small>(PN + FR + CD) × 18%</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Total -->
+                <div class="alert alert-success">
+                    <h5 class="text-center mb-0">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Prime Totale (PT) = PN + FR + CD + TVA = 
+                        <strong>{{ prime_result.pt | format_currency }}</strong>
+                    </h5>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ url_for('policy_parameters', policy_id=policy_id) }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Parameters
+                    </a>
+                    <button class="btn btn-bicor" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Print Calculation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

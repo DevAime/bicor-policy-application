@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Insurance CRM Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white p-5 rounded">
+            <h1 class="display-4"><i class="fas fa-shield-alt me-3"></i>Insurance CRM</h1>
+            <p class="lead">Professional client management system for insurance companies</p>
+            <hr class="my-4">
+            <p>Manage your clients, policies, and claims efficiently with our comprehensive CRM solution.</p>
+            <a class="btn btn-light btn-lg" href="{{ url_for('clients') }}" role="button">
+                <i class="fas fa-users me-2"></i>View All Clients
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3"></i>
+                <h2 class="card-title">{{ total_clients }}</h2>
+                <p class="card-text">Total Clients</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <i class="fas fa-user-check fa-3x mb-3"></i>
+                <h2 class="card-title">{{ recent_clients|length }}</h2>
+                <p class="card-text">Recent Clients</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                <h2 class="card-title">0</h2>
+                <p class="card-text">Active Policies</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body text-center">
+                <i class="fas fa-file-invoice fa-3x mb-3"></i>
+                <h2 class="card-title">0</h2>
+                <p class="card-text">Pending Claims</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recently Added Clients</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_clients %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Added</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in recent_clients %}
+                            <tr>
+                                <td><strong>#{{ client.ID }}</strong></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            {{ client.Nom[0] if client.Nom else '?' }}{{ client.Prenom[0] if client.Prenom else '?' }}
+                                        </div>
+                                        <div>
+                                            <strong>{{ client.Nom }} {{ client.Prenom }}</strong>
+                                            <br>
+                                            <small class="text-muted">NIF: {{ client.NIF or 'N/A' }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if client.Email %}
+                                    <div><i class="fas fa-envelope me-2 text-muted"></i>{{ client.Email }}</div>
+                                    {% endif %}
+                                    {% if client.MobPhone %}
+                                    <div><i class="fas fa-phone me-2 text-muted"></i>{{ client.MobPhone }}</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ client.CreatOn or 'Unknown' }}</small>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('view_client', id=client.ID) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No clients found. Add your first client to get started.</p>
+                    <a href="{{ url_for('add_client') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add First Client
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_client') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Add New Client
+                    </a>
+                    <a href="{{ url_for('clients') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-list me-2"></i>View All Clients
+                    </a>
+                    <a href="#" class="btn btn-outline-secondary">
+                        <i class="fas fa-search me-2"></i>Search Clients
+                    </a>
+                    <a href="#" class="btn btn-outline-info">
+                        <i class="fas fa-chart-bar me-2"></i>Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>System Info</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <strong>Database:</strong> data.db
+                </div>
+                <div class="mb-2">
+                    <strong>Total Clients:</strong> {{ total_clients }}
+                </div>
+                <div class="mb-2">
+                    <strong>Table:</strong> Clients
+                </div>
+                <div>
+                    <strong>Columns:</strong> {{ columns|length }} fields
+                </div>
+            </div>
+        </div>
+
+        <!-- Added Quick Search card -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-search me-2"></i>Quick Search</h5>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('search_clients') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Search Clients</label>
+                        <input type="text" class="form-control" name="q"
+                               placeholder="ID, Name, Phone..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Search In</label>
+                        <select class="form-select" name="type">
+                            <option value="all">All Fields</option>
+                            <option value="id">Client ID</option>
+                            <option value="nom">Last Name (Nom)</option>
+                            <option value="prenom">First Name (Prenom)</option>
+                            <option value="mobphone">Phone Number</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

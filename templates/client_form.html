@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}{% if action == 'add' %}Add New Client - Bicor CRM{% else %}Edit Client - {{ client.Nom }} {{ client.Prenom }}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    {% if action == 'add' %}
+                    <i class="fas fa-user-plus me-2"></i>Add New Client
+                    {% else %}
+                    <i class="fas fa-user-edit me-2"></i>Edit Client: {{ client.Nom }} {{ client.Prenom }}
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Personal Information -->
+                    <h5 class="text-bicor mb-4 border-bottom pb-2"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="Nom" class="col-form-label fw-bold text-bicor">Nom *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="Nom" name="Nom"
+                                           value="{{ client.Nom if client else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="Prenom" class="col-form-label fw-bold text-bicor">Prenom *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="Prenom" name="Prenom"
+                                           value="{{ client.Prenom if client else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="NIF" class="col-form-label fw-bold text-bicor">NIF *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control input-medium" id="NIF" name="NIF"
+                                           value="{{ client.NIF if client else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="DateNais" class="col-form-label fw-bold text-bicor">Date de Naissance</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control input-medium" id="DateNais" name="DateNais"
+                                           value="{{ client.DateNais if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="LieuNais" class="col-form-label fw-bold text-bicor">Lieu de Naissance</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="LieuNais" name="LieuNais"
+                                           value="{{ client.LieuNais if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <h5 class="text-bicor mb-4 border-bottom pb-2"><i class="fas fa-phone me-2"></i>Contact Information</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="Email" class="col-form-label fw-bold text-bicor">Email</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="email" class="form-control" id="Email" name="Email"
+                                           value="{{ client.Email if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="MobPhone" class="col-form-label fw-bold text-bicor">Mobile Phone *</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="tel" class="form-control input-number" id="MobPhone" name="MobPhone"
+                                           value="{{ client.MobPhone if client else '' }}" required
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="MobPhone2" class="col-form-label fw-bold text-bicor">Secondary Phone</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="tel" class="form-control input-number" id="MobPhone2" name="MobPhone2"
+                                           value="{{ client.MobPhone2 if client else '' }}"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="Residence" class="col-form-label fw-bold text-bicor">Residence</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="Residence" name="Residence"
+                                           value="{{ client.Residence if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="Zone" class="col-form-label fw-bold text-bicor">Zone</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="Zone" name="Zone"
+                                           value="{{ client.Zone if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <h5 class="text-bicor mb-4 border-bottom pb-2"><i class="fas fa-info-circle me-2"></i>Additional Information</h5>
+                    <div class="row g-3 mb-4">
+                        <!-- Numeric fields -->
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="ComID" class="col-form-label fw-bold text-bicor">ComID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="ComID" name="ComID"
+                                           value="{{ client.ComID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="AgentInt" class="col-form-label fw-bold text-bicor">AgentInt</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="AgentInt" name="AgentInt"
+                                           value="{{ client.AgentInt if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="SexeID" class="col-form-label fw-bold text-bicor">SexeID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="SexeID" name="SexeID"
+                                           value="{{ client.SexeID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="BranchID" class="col-form-label fw-bold text-bicor">BranchID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="BranchID" name="BranchID"
+                                           value="{{ client.BranchID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="NationalID" class="col-form-label fw-bold text-bicor">NationalID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="NationalID" name="NationalID"
+                                           value="{{ client.NationalID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="EtatCivID" class="col-form-label fw-bold text-bicor">EtatCivID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="EtatCivID" name="EtatCivID"
+                                           value="{{ client.EtatCivID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="PosCliID" class="col-form-label fw-bold text-bicor">PosCliID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="PosCliID" name="PosCliID"
+                                           value="{{ client.PosCliID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="CategID" class="col-form-label fw-bold text-bicor">CategID</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control input-small" id="CategID" name="CategID"
+                                           value="{{ client.CategID if client else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boolean fields -->
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="Valide" class="col-form-label fw-bold text-bicor">Valide</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select input-small" id="Valide" name="Valide">
+                                        <option value="1" {% if client and client.Valide == 1 %}selected{% endif %}>Yes</option>
+                                        <option value="0" {% if client and client.Valide == 0 %}selected{% endif %}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label for="PaieTVA" class="col-form-label fw-bold text-bicor">PaieTVA</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select input-small" id="PaieTVA" name="PaieTVA">
+                                        <option value="1" {% if client and client.PaieTVA == 1 %}selected{% endif %}>Yes</option>
+                                        <option value="0" {% if client and client.PaieTVA == 0 %}selected{% endif %}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-bicor">
+                                    <i class="fas fa-save me-2"></i>
+                                    {% if action == 'add' %}Create Client{% else %}Update Client{% endif %}
+                                </button>
+                                <a href="{{ url_for('clients') }}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

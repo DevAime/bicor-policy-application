@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}{% if parameters %}Edit{% else %}Add{% endif %} Parameters - {{ policy.PolicyNumber }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>
+                    {% if parameters %}Edit{% else %}Add{% endif %} INCENDIE Parameters: {{ policy.PolicyNumber }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="parametersForm">
+                    <!-- Basic Information -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Basic Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Bien As. Code</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="BienAsCode"
+                                           value="{{ parameters.BienAsCode if parameters else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Compte souscripteur</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="CompteSouscripteur"
+                                           value="{{ parameters.CompteSouscripteur if parameters else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <label class="col-form-label fw-bold text-bicor">Description</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <textarea class="form-control" name="Description" rows="2">{{ parameters.Description if parameters else '' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Information -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Location Information</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Province</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="ProvinceID">
+                                        <option value="">Select Province</option>
+                                        {% for province in form_data.provinces %}
+                                        <option value="{{ province.ProvinceID }}" {% if parameters and parameters.ProvinceID == province.ProvinceID %}selected{% endif %}>
+                                            {{ province.ProvinceName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Ville</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="Ville"
+                                           value="{{ parameters.Ville if parameters else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Zone</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="Zone"
+                                           value="{{ parameters.Zone if parameters else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Adresse résidence</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="AdresseResidence"
+                                           value="{{ parameters.AdresseResidence if parameters else '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Details -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Property Details</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Type Bien</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="TypeBienID" id="TypeBienID">
+                                        <option value="">Select Type Bien</option>
+                                        {% for type in form_data.type_bien %}
+                                        <option value="{{ type.TypeBienID }}" {% if parameters and parameters.TypeBienID == type.TypeBienID %}selected{% endif %}>
+                                            {{ type.TypeBienName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Sous Type Bien</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="SousTypeBienID" id="SousTypeBienID">
+                                        <option value="">Select Sous Type Bien</option>
+                                        {% if parameters and parameters.TypeBienID %}
+                                            {% for sous_type in form_data.sous_type_bien %}
+                                                {% if sous_type.ParentID == parameters.TypeBienID %}
+                                                <option value="{{ sous_type.SousTypeBienID }}" {% if parameters.SousTypeBienID == sous_type.SousTypeBienID %}selected{% endif %}>
+                                                    {{ sous_type.SousTypeBienName }}
+                                                </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Catégorie Bien</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="CategorieBienID">
+                                        <option value="">Select Catégorie Bien</option>
+                                        {% for categorie in form_data.categorie_bien %}
+                                        <option value="{{ categorie.CategorieBienID }}" {% if parameters and parameters.CategorieBienID == categorie.CategorieBienID %}selected{% endif %}>
+                                            {{ categorie.CategorieBienName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Type Matériaux</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="TypeMateriauxID">
+                                        <option value="">Select Type Matériaux</option>
+                                        {% for materiaux in form_data.type_materiaux %}
+                                        <option value="{{ materiaux.TypeMateriauxID }}" {% if parameters and parameters.TypeMateriauxID == materiaux.TypeMateriauxID %}selected{% endif %}>
+                                            {{ materiaux.TypeMateriauxName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Catégorie Risque</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-select" name="CategorieRisqueID">
+                                        <option value="">Select Catégorie Risque</option>
+                                        {% for risque in form_data.categorie_risque %}
+                                        <option value="{{ risque.CategorieRisqueID }}" {% if parameters and parameters.CategorieRisqueID == risque.CategorieRisqueID %}selected{% endif %}>
+                                            {{ risque.CategorieRisqueName }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Information -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Financial Information (BIF)</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Valeur bien assuré (BIF)</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control" name="ValeurBienAssure"
+                                           value="{{ parameters.ValeurBienAssure if parameters else '' }}"
+                                           step="1" min="0" placeholder="Amount in BIF">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="col-form-label fw-bold text-bicor">Valeur équipements intérieur (BIF)</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control" name="ValeurEquipementsInterieur"
+                                           value="{{ parameters.ValeurEquipementsInterieur if parameters else '' }}"
+                                           step="1" min="0" placeholder="Amount in BIF">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Garantits (Covers) Section -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Garantits (Covers)</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>IEFCACV</strong> is required for all INCENDIE policies and is selected by default.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="row">
+                                {% for garantit in form_data.garantits %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="garantit_{{ garantit.GarantitID }}"
+                                                       id="garantit_{{ garantit.GarantitID }}"
+                                                       {% if garantit.GarantitID == 1 %}checked{% endif %}
+                                                       {% if garantit.GarantitID == 1 %}onclick="return false;"{% endif %}
+                                                       {% if garantits_selection and garantits_selection.get(garantit.GarantitID) %}checked{% endif %}>
+                                                <label class="form-check-label fw-bold" for="garantit_{{ garantit.GarantitID }}">
+                                                    {{ garantit.GarantitCode }}: {{ garantit.GarantitName }}
+                                                </label>
+                                                {% if garantit.Description %}
+                                                <p class="text-muted mb-0 small">{{ garantit.Description }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observations -->
+                    <h6 class="text-bicor mb-3 border-bottom pb-2">Observations</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <textarea class="form-control" name="Observations" rows="4"
+                                      placeholder="Enter any observations or notes...">{{ parameters.Observations if parameters else '' }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-bicor">
+                                    <i class="fas fa-save me-2"></i>
+                                    {% if parameters %}Update{% else %}Create{% endif %} Parameters
+                                </button>
+                                <a href="{{ url_for('policy_parameters', policy_id=policy.PolicyID) }}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                <a href="{{ url_for('view_policy', policy_id=policy.PolicyID) }}" class="btn btn-info">
+                                    <i class="fas fa-file-contract me-2"></i>View Policy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Dynamic loading of Sous Type Bien based on Type Bien selection
+document.getElementById('TypeBienID').addEventListener('change', function() {
+    const typeBienID = this.value;
+    const sousTypeSelect = document.getElementById('SousTypeBienID');
+
+    if (typeBienID) {
+        // Fetch sub-types for the selected parent type
+        fetch(`/api/sous-types/${typeBienID}`)
+            .then(response => response.json())
+            .then(data => {
+                sousTypeSelect.innerHTML = '<option value="">Select Sous Type Bien</option>';
+                data.forEach(sousType => {
+                    const option = document.createElement('option');
+                    option.value = sousType.SousTypeBienID;
+                    option.textContent = sousType.SousTypeBienName;
+                    sousTypeSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching sous types:', error));
+    } else {
+        sousTypeSelect.innerHTML = '<option value="">Select Sous Type Bien</option>';
+    }
+});
+
+// Prevent unchecking of IEFCACV (required field)
+document.querySelectorAll('input[name^="garantit_"]').forEach(checkbox => {
+    if (checkbox.id === 'garantit_1') {
+        checkbox.addEventListener('click', function(e) {
+            if (!this.checked) {
+                e.preventDefault();
+                alert('IEFCACV is required for all INCENDIE policies and cannot be deselected.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

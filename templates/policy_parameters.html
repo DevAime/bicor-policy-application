@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Policy Parameters - {{ policy.PolicyNumber }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>INCENDIE Policy Parameters: {{ policy.PolicyNumber }}</h2>
+        <p class="text-muted">
+            Client: {{ policy.Nom }} {{ policy.Prenom }} |
+            Policy ID: <strong>{{ policy.PolicyID }}</strong> |
+            NIF: {{ policy.NIF or 'N/A' }}
+        </p>
+    </div>
+    <div>
+        <a href="{{ url_for('edit_policy_parameters', policy_id=policy.PolicyID) }}" class="btn btn-warning">
+            <i class="fas fa-edit me-2"></i>Edit Parameters
+        </a>
+        <a href="{{ url_for('view_policy', policy_id=policy.PolicyID) }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Policy
+        </a>
+    </div>
+</div>
+
+{% if parameters %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>INCENDIE Policy Parameters
+                    <small class="text-muted ms-2">(Policy ID: {{ policy.PolicyID }})</small>
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Policy ID Display at the top -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="alert alert-info">
+                            <strong><i class="fas fa-id-card me-2"></i>Policy Information:</strong><br>
+                            Policy ID: <strong>{{ policy.PolicyID }}</strong><br>
+                            Policy Number: <strong>{{ policy.PolicyNumber }}</strong><br>
+                            Product: <strong>INCENDIE</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Basic Information -->
+                    <div class="col-md-6">
+                        <h6 class="text-bicor mb-3 border-bottom pb-2">Basic Information</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Bien As. Code:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.BienAsCode or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Compte souscripteur:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.CompteSouscripteur or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Description:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.Description or '---' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Information -->
+                    <div class="col-md-6">
+                        <h6 class="text-bicor mb-3 border-bottom pb-2">Location Information</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Province:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.ProvinceName or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Ville:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.Ville or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Zone:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.Zone or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Adresse résidence:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.AdresseResidence or '---' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Details -->
+                <hr>
+                <h6 class="text-bicor mb-3 border-bottom pb-2">Property Details</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Type Bien:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.TypeBienName or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Sous Type Bien:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.SousTypeBienName or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Catégorie Bien:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.CategorieBienName or '---' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Type Matériaux:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.TypeMateriauxName or '---' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Catégorie Risque:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.CategorieRisqueName or '---' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Information -->
+                <hr>
+                <h6 class="text-bicor mb-3 border-bottom pb-2">Financial Information (BIF)</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Valeur bien assuré:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.ValeurBienAssure | format_currency if parameters.ValeurBienAssure else '---' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <strong class="text-bicor">Valeur équipements intérieur:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                <span class="text-muted">{{ parameters.ValeurEquipementsInterieur | format_currency if parameters.ValeurEquipementsInterieur else '---' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After the Financial Information -->
+                {% if garantits %}
+                <hr>
+                <h6 class="text-bicor mb-3 border-bottom pb-2">Garantits (Covers)</h6>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            {% for garantit in garantits %}
+                            <div class="col-md-6 mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" disabled
+                                           {% if garantit.IsSelected %}checked{% endif %}>
+                                    <label class="form-check-label">
+                                        <strong>{{ garantit.GarantitCode }}</strong>: {{ garantit.GarantitName }}
+                                        {% if garantit.Description %}
+                                        <br><small class="text-muted">{{ garantit.Description }}</small>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Observations -->
+                {% if parameters.Observations %}
+                <hr>
+                <h6 class="text-bicor mb-3 border-bottom pb-2">Observations</h6>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="bg-light p-3 rounded">
+                            {{ parameters.Observations }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-cog fa-3x text-muted mb-3"></i>
+    <h4 class="text-muted">No Parameters Found</h4>
+    <p class="text-muted">Policy ID: <strong>{{ policy.PolicyID }}</strong> - This policy doesn't have any parameters configured yet.</p>
+    <a href="{{ url_for('edit_policy_parameters', policy_id=policy.PolicyID) }}" class="btn btn-bicor">
+        <i class="fas fa-plus me-2"></i>Add Parameters
+    </a>
+</div>
+{% endif %}
+<!-- Add this button to the action buttons section -->
+<div class="mt-3">
+    <a href="{{ url_for('calculate_policy_prime', policy_id=policy.PolicyID) }}" class="btn btn-success">
+        <i class="fas fa-calculator me-2"></i>Calculate Prime
+    </a>
+</div>
+<div class="mt-4">
+    <a href="{{ url_for('view_policy', policy_id=policy.PolicyID) }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Policy
+    </a>
+</div>
+{% endblock %}
