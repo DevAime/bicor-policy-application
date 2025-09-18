@@ -39,7 +39,7 @@ A functional web-based CRM system developed during an internship for Bicor Insur
 - **Frontend**: HTML5, Bootstrap 5, JavaScript
 - **Styling**: Custom CSS with Bicor green theme
 
-## 📦 Quick Start
+##  Quick Start
 
 1. **Install dependencies**:
    ```bash
@@ -51,7 +51,7 @@ bash
 python app.py
 
 
-🗄️ Database Includes
+### Database Includes
 Clients and Policies tables
 
 Parameter tables for INCENDIE policies
@@ -62,7 +62,7 @@ Reference tables (Provinces, Garantits, Property types)
 
 Prime calculation audit tables
 
-🎯 Key Functionality
+### Key Functionality
 ✅ Complete client CRM system
 
 ✅ Multi-product policy management
@@ -77,7 +77,7 @@ Prime calculation audit tables
 
 ✅ Responsive design for all devices
 
-📱 Interface
+### Interface
 Modern, professional interface featuring:
 
 Bicor's corporate green and white theme
@@ -89,4 +89,13 @@ intuitive navigation and forms
 Professional data presentation
 
 Mobile-friendly layout
+
+<img width="1879" height="894" alt="image" src="https://github.com/user-attachments/assets/6a626fb4-270a-4b16-aa21-b16219a40552" />
+
+<img width="1876" height="884" alt="image" src="https://github.com/user-attachments/assets/a60d0856-f167-4017-ab32-16ad21b65197" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/494090d4-5780-4b5c-ac58-47da61e4348b" />
+
+
+
 
